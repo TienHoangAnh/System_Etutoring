@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa nhân viên</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Chỉnh sửa nhân viên</h2>
+        <form action="/users/staffmanage/edit/{{staff._id}}" method="POST">
+            <label for="name">Tên:</label>
+            <input type="text" id="name" name="name" value="{{staff.name}}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{staff.email}}" required>
+
+            <label for="phone">Số điện thoại:</label>
+            <input type="text" id="phone" name="phone" value="{{staff.phone}}" required>
+
+            <label for="address">Địa chỉ:</label>
+            <input type="text" id="address" name="address" value="{{staff.address}}" required>
+
+            <button type="submit">Lưu thay đổi</button>
+        </form>
+    </div>
+
+</body>
+</html>

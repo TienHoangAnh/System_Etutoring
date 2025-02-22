@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="692719936095-876ocuj6a3gpb6qmnk5gfg1hoqjifr7i.apps.googleusercontent.com">
+    <title>Đăng ký & Đăng nhập</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-box" id="register-box">
+            <h2>Đăng Nhập</h2>
+            <form action="/login" method="POST">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="/create">Register here</a></p>
+        </div>
+        <!-- Đăng nhập bằng Google -->
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    </div>
+
+    <!-- Google Sign-In SDK -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            var id_token = googleUser.getAuthResponse().id_token;
+
+            console.log("User signed in:", profile.getEmail());
+
+            // Gửi id_token về backend để xác thực
+            fetch('/auth/google/callback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: id_token })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "/"; // Chuyển hướng sau khi đăng nhập thành công
+                } else {
+                    console.error("Google Sign-In failed:", data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>

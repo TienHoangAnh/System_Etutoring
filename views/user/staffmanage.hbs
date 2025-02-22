@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý nhân viên</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .navbar {
+            background: #007bff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .action-select {
+            padding: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/users/homeadmin">Trang chủ Admin</a>
+        <a href="/users/staffmanage">Quản lý nhân viên</a>       
+        <a href="/logout">Đăng xuất</a>
+    </nav>
+
+    <div class="container">
+        <h2>Danh sách nhân viên</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Địa chỉ</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each staffList}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.phone}}</td>
+                    <td>{{this.address}}</td>
+                    <td>
+                        <select class="action-select" onchange="handleAction('{{this._id}}', this.value)">
+                            <option value="">Chọn hành động</option>
+                            <option value="edit">Chỉnh sửa</option>
+                            <option value="delete">Xóa</option>
+                        </select>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <button><a href="/create">Thêm nhân viên mới</a></button>
+    </div>
+
+    <script>
+        function handleAction(userId, action) {
+            if (action === "edit") {
+                window.location.href = `/users/staffmanage/edit/${userId}`;
+            } else if (action === "delete") {
+                if (confirm("Bạn có chắc chắn muốn xóa nhân viên này không?")) {
+                    fetch(`/users/staffmanage/delete/${userId}`, { method: 'DELETE' })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Xóa thành công!");
+                                window.location.reload();
+                            } else {
+                                alert("Lỗi khi xóa nhân viên!");
+                            }
+                        });
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

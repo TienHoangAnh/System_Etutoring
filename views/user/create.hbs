@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký & Đăng nhập</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-box" id="register-box">
+            <h2>Tạo tài khoản mới</h2>
+            <form action="/create" method="POST">
+                <input type="text" id="name" name="name" placeholder="Họ và Tên" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="text" id="phone" name="phone" placeholder="Số điện thoại">
+                <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                <input type="text" id="subject" name="subject" placeholder="Môn học">
+                <input type="text" id="address" name="address" placeholder="Địa chỉ">
+                                <select id="role" name="role" required>
+                    <option value="">Chọn vai trò</option>
+                    {{!-- <option value="admin">Admin</option> --}}
+                    <option value="staff">Staff</option>
+                    {{!-- <option value="authorized">Authorized Staff</option> --}}
+                    <option value="tutor">Tutor</option>
+                    <option value="student">Student</option>
+                </select>
+                <select id="gender" name="gendere">
+                    <option value="">Chọn giới tính</option>
+                    <option value="Male">Nam</option>
+                    <option value="Female">Nữ</option>
+                    <option value="Other">Khác</option>
+                </select>
+                <select id="tutor" name="tutor">
+                    <option value="">Chọn gia sư</option>
+                </select>
+                <br><br>
+                <button type="submit">Đăng ký</button>
+            </form>
+            <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
+    </div>  
+
+<script>document.addEventListener("DOMContentLoaded", async () => {
+    const roleSelect = document.getElementById("role");
+    const tutorSelect = document.getElementById("tutor");
+
+    async function loadTutors() {
+        try {
+            console.log("Fetching tutors...");
+            const response = await fetch("users/get-tutors");
+            const tutors = await response.json();
+            console.log("Tutors received:", tutors); // Log dữ liệu để kiểm tra
+
+            tutorSelect.innerHTML = '<option value="">Chọn gia sư</option>';
+            
+            tutors.forEach(tutor => {
+                const option = document.createElement("option");
+                option.value = tutor._id;
+                option.textContent = tutor.name;
+                tutorSelect.appendChild(option);
+            });
+
+            console.log("Tutor select updated!"); // Log khi cập nhật xong
+        } catch (error) {
+            console.error("Lỗi tải danh sách tutor:", error);
+        }
+    }
+
+    roleSelect.addEventListener("change", () => {
+        if (roleSelect.value === "student") {
+            tutorSelect.required = true;
+            loadTutors(); // Gọi API
+        } else {
+            tutorSelect.required = false;
+            tutorSelect.innerHTML = '<option value="">Chọn gia sư</option>'; // Reset
+        }
+    });
+});
+</script>
+</body>
+</html>
